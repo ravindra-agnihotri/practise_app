@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: practise-app
+    env: java
+    buildCommand: mvn clean install
+    startCommand: java -jar target/ui-automation-portal-1.0.0.jar
