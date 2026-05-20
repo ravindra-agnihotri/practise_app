@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Alerts - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link active">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <a href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">🔔 Alert Automation Practice</div>
+        <h1 class="page-title">Alerts &amp; Notifications</h1>
+        <p class="page-subtitle">Practice interacting with browser alerts, confirm dialogs, prompts, and custom notifications.</p>
+    </div>
+
+    <!-- BROWSER NATIVE ALERTS -->
+    <div class="card mb-6" id="section-browser-alerts">
+        <div class="card-header"><div class="card-title">🌐 Browser Native Dialogs</div></div>
+        <div class="card-body">
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:20px;">
+                These trigger native browser dialogs — practice accepting, dismissing, and reading text from them.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                <button class="btn btn-primary" id="btn-alert" onclick="alert('This is a browser alert!\nPractice: window.alert()')">
+                    Trigger alert()
+                </button>
+                <button class="btn btn-warning" id="btn-confirm-ok" onclick="
+                    const result = confirm('Do you want to proceed?\n\nClick OK to confirm.');
+                    document.getElementById('confirm-result').textContent = result ? '✓ User clicked OK' : '✕ User clicked Cancel';
+                    document.getElementById('confirm-result').style.display = 'block';
+                ">Trigger confirm()</button>
+                <button class="btn btn-secondary" id="btn-prompt" onclick="
+                    const result = prompt('Enter your name:', 'Tester');
+                    const el = document.getElementById('prompt-result');
+                    el.textContent = result !== null ? '✓ Input: ' + result : '✕ User cancelled';
+                    el.style.display = 'block';
+                ">Trigger prompt()</button>
+                <button class="btn btn-danger" id="btn-confirm-delete" onclick="
+                    if(confirm('⚠️ Delete item?\n\nThis action cannot be undone.')) {
+                        showToast('Item deleted (simulated)', 'danger');
+                    }
+                ">Confirm Delete Dialog</button>
+            </div>
+            <div id="confirm-result" style="display:none; margin-top:16px; padding:10px 14px; background:var(--dark-3); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.875rem;"></div>
+            <div id="prompt-result" style="display:none; margin-top:8px; padding:10px 14px; background:var(--dark-3); border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:0.875rem;"></div>
+        </div>
+    </div>
+
+    <!-- CUSTOM ALERTS -->
+    <div class="card mb-6" id="section-custom-alerts">
+        <div class="card-header"><div class="card-title">🎨 Custom Alert Styles</div></div>
+        <div class="card-body">
+            <div class="alert alert-success" id="alert-success-static">
+                <span>✓</span>
+                <div><strong>Success!</strong> Your operation completed successfully. Data has been saved.</div>
+            </div>
+            <div class="alert alert-danger" id="alert-danger-static">
+                <span>✕</span>
+                <div><strong>Error!</strong> Something went wrong. Please try again later.</div>
+            </div>
+            <div class="alert alert-warning" id="alert-warning-static">
+                <span>⚠</span>
+                <div><strong>Warning!</strong> Your session will expire in 5 minutes. Please save your work.</div>
+            </div>
+            <div class="alert alert-info" id="alert-info-static">
+                <span>ℹ</span>
+                <div><strong>Info:</strong> New features available. <a href="#" style="color:inherit; text-decoration:underline;">Learn more</a></div>
+            </div>
+
+            <!-- Dismissable alerts -->
+            <h4 style="margin: 24px 0 16px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">Dismissable Alerts</h4>
+            <div class="alert alert-success" id="alert-dismissable-1">
+                <span>✓</span>
+                <div style="flex:1;">Dismissable success alert — click ✕ to close.</div>
+                <button class="alert-close" style="background:none;border:none;cursor:pointer;color:inherit;font-size:1.1rem;">✕</button>
+            </div>
+            <div class="alert alert-warning" id="alert-dismissable-2">
+                <span>⚠</span>
+                <div style="flex:1;">Dismissable warning alert — auto-closes in 10 seconds.</div>
+                <button class="alert-close" style="background:none;border:none;cursor:pointer;color:inherit;font-size:1.1rem;">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div class="card mb-6" id="section-toasts">
+        <div class="card-header"><div class="card-title">🍞 Toast Notifications</div></div>
+        <div class="card-body">
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:20px;">
+                Toast notifications appear in the top-right corner and auto-dismiss after 4 seconds.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                <button class="btn btn-success" id="btn-toast-success" onclick="showToast('✓ Operation completed successfully!', 'success')">Success Toast</button>
+                <button class="btn btn-danger" id="btn-toast-error" onclick="showToast('✕ An error occurred. Please try again.', 'danger')">Error Toast</button>
+                <button class="btn btn-warning" id="btn-toast-warning" onclick="showToast('⚠ Warning: Low disk space!', 'warning')">Warning Toast</button>
+                <button class="btn btn-primary" id="btn-toast-info" onclick="showToast('ℹ New update available. Refresh to apply.', 'info')">Info Toast</button>
+                <button class="btn btn-outline" id="btn-toast-multi" onclick="
+                    ['success','danger','warning','info'].forEach((t,i) => setTimeout(() => showToast('Toast notification: ' + t, t), i * 600))
+                ">Show All Toasts</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TIMED ALERTS -->
+    <div class="card mb-6" id="section-timed">
+        <div class="card-header"><div class="card-title">⏱️ Timed &amp; Delayed Elements</div></div>
+        <div class="card-body">
+            <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:20px;">
+                Practice waiting for elements that appear after a delay — great for explicit wait practice.
+            </p>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+                <button class="btn btn-primary" id="btn-delayed-1s" onclick="showDelayedAlert(1000, '1s')">Show after 1s</button>
+                <button class="btn btn-secondary" id="btn-delayed-3s" onclick="showDelayedAlert(3000, '3s')">Show after 3s</button>
+                <button class="btn btn-warning" id="btn-delayed-5s" onclick="showDelayedAlert(5000, '5s')">Show after 5s</button>
+            </div>
+            <div id="delayed-alert-container"></div>
+
+            <!-- Countdown -->
+            <div style="margin-top:24px; padding:20px; background:var(--dark-3); border-radius:var(--radius-sm);">
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:12px;">Countdown Timer (practice waiting):</p>
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <div id="countdown-display" style="font-size:3rem; font-weight:700; font-family:var(--font-mono); color:var(--primary-light);">10</div>
+                    <div>
+                        <button class="btn btn-primary btn-sm" id="btn-start-countdown" onclick="startCountdown()">Start</button>
+                        <button class="btn btn-outline btn-sm" id="btn-reset-countdown" onclick="resetCountdown()" style="margin-left:8px;">Reset</button>
+                    </div>
+                    <div id="countdown-result" style="display:none;" class="badge badge-success">🎉 Done!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INLINE VALIDATION ALERTS -->
+    <div class="card mb-6" id="section-inline-alerts">
+        <div class="card-header"><div class="card-title">✏️ Inline Validation Alerts</div></div>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-label" for="inline-email">Email (type to see validation)</label>
+                <input type="email" id="inline-email" class="form-control" placeholder="test@example.com"
+                       oninput="validateEmail(this)"/>
+                <div id="email-valid-msg" style="display:none; margin-top:6px;" class="alert alert-success">
+                    <span>✓</span><span>Valid email address!</span>
+                </div>
+                <div id="email-invalid-msg" style="display:none; margin-top:6px;" class="alert alert-danger">
+                    <span>✕</span><span>Please enter a valid email address.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Alerts &amp; Notifications Practice</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+function showDelayedAlert(ms, label) {
+    const container = document.getElementById('delayed-alert-container');
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = 'color:var(--text-muted); font-size:0.875rem; font-family:var(--font-mono);';
+    placeholder.textContent = `⏳ Waiting ${label}...`;
+    placeholder.id = `delayed-${ms}`;
+    container.appendChild(placeholder);
+    setTimeout(() => {
+        placeholder.outerHTML = `<div class="alert alert-success" style="margin-top:8px;" id="delayed-result-${ms}">
+            <span>✓</span><span>Alert appeared after ${label}! Timestamp: ${new Date().toLocaleTimeString()}</span>
+        </div>`;
+    }, ms);
+}
+
+let countdownInterval = null;
+let countdownValue = 10;
+function startCountdown() {
+    if (countdownInterval) return;
+    document.getElementById('countdown-result').style.display = 'none';
+    countdownInterval = setInterval(() => {
+        countdownValue--;
+        document.getElementById('countdown-display').textContent = countdownValue;
+        if (countdownValue <= 0) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            document.getElementById('countdown-result').style.display = 'inline-flex';
+        }
+    }, 1000);
+}
+function resetCountdown() {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+    countdownValue = 10;
+    document.getElementById('countdown-display').textContent = '10';
+    document.getElementById('countdown-result').style.display = 'none';
+}
+
+function validateEmail(input) {
+    const valid = /^[^@]+@[^@]+\.[^@]+$/.test(input.value);
+    const validMsg = document.getElementById('email-valid-msg');
+    const invalidMsg = document.getElementById('email-invalid-msg');
+    if (input.value.length === 0) { validMsg.style.display = 'none'; invalidMsg.style.display = 'none'; return; }
+    validMsg.style.display = valid ? 'flex' : 'none';
+    invalidMsg.style.display = valid ? 'none' : 'flex';
+}
+</script>
+</body>
+</html>

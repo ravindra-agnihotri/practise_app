@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>UI Elements - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link active">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <a href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <div class="container">
+        <div class="page-header">
+            <div class="badge-tag">🎨 UI Automation Elements</div>
+            <h1 class="page-title">UI Elements Reference</h1>
+            <p class="page-subtitle">All interactive elements available for automation practice. Each has unique IDs and data attributes.</p>
+        </div>
+
+        <!-- BUTTONS SECTION -->
+        <div class="card mb-6" id="section-buttons">
+            <div class="card-header">
+                <div class="card-title">🔘 Buttons</div>
+                <code class="font-mono text-sm text-muted">#section-buttons</code>
+            </div>
+            <div class="card-body">
+                <h4 style="margin-bottom:16px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">Button Variants</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                    <button class="btn btn-primary" id="btn-primary">Primary</button>
+                    <button class="btn btn-secondary" id="btn-secondary">Secondary</button>
+                    <button class="btn btn-success" id="btn-success">Success</button>
+                    <button class="btn btn-danger" id="btn-danger">Danger</button>
+                    <button class="btn btn-warning" id="btn-warning">Warning</button>
+                    <button class="btn btn-outline" id="btn-outline">Outline</button>
+                    <button class="btn btn-primary" id="btn-disabled" disabled>Disabled</button>
+                </div>
+
+                <h4 style="margin-bottom:16px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">Button Sizes</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:24px;">
+                    <button class="btn btn-primary btn-sm" id="btn-sm">Small</button>
+                    <button class="btn btn-primary" id="btn-md">Medium</button>
+                    <button class="btn btn-primary btn-lg" id="btn-lg">Large</button>
+                </div>
+
+                <h4 style="margin-bottom:16px; color:var(--text-muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em;">Interactive Buttons</h4>
+                <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                    <button class="btn btn-primary" id="btn-click-counter" onclick="this.querySelector('span').textContent = parseInt(this.querySelector('span').textContent)+1">
+                        Clicked: <span>0</span> times
+                    </button>
+                    <button class="btn btn-success" id="btn-toggle-text" onclick="this.textContent = this.textContent === 'Toggle ON' ? 'Toggle OFF' : 'Toggle ON'">Toggle ON</button>
+                    <button class="btn btn-warning" id="btn-async-action" onclick="
+                        this.disabled=true; this.textContent='Loading...';
+                        setTimeout(() => { this.disabled=false; this.textContent='Done! ✓'; }, 2000);
+                    ">Async Button (2s)</button>
+                    <button class="btn btn-secondary" id="btn-toast" onclick="showToast('Button clicked!', 'info')">Show Toast</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- INPUT TYPES -->
+        <div class="card mb-6" id="section-inputs">
+            <div class="card-header">
+                <div class="card-title">📥 Input Types</div>
+                <code class="font-mono text-sm text-muted">#section-inputs</code>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="input-text">Text Input</label>
+                        <input type="text" id="input-text" class="form-control" placeholder="Enter text here"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-email">Email Input</label>
+                        <input type="email" id="input-email" class="form-control" placeholder="user@example.com"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-password">Password Input</label>
+                        <input type="password" id="input-password" class="form-control" placeholder="••••••••"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-number">Number Input</label>
+                        <input type="number" id="input-number" class="form-control" placeholder="42" min="0" max="999"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-tel">Telephone</label>
+                        <input type="tel" id="input-tel" class="form-control" placeholder="+1 555 000 0000"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-url">URL Input</label>
+                        <input type="url" id="input-url" class="form-control" placeholder="https://example.com"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-date">Date Picker</label>
+                        <input type="date" id="input-date" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-time">Time Picker</label>
+                        <input type="time" id="input-time" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-datetime">DateTime Local</label>
+                        <input type="datetime-local" id="input-datetime" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-color">Color Picker</label>
+                        <input type="color" id="input-color" class="form-control" value="#6366f1" style="padding:4px; height:42px;"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-search">Search Input</label>
+                        <input type="search" id="input-search" class="form-control" placeholder="Search..."/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="input-readonly">Read Only</label>
+                        <input type="text" id="input-readonly" class="form-control" value="This is read-only" readonly/>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:8px;">
+                    <label class="form-label" for="input-textarea">Textarea</label>
+                    <textarea id="input-textarea" class="form-control" rows="4" maxlength="500" placeholder="Type a long message here..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-range">Range Slider: <span id="input-range_value">50</span></label>
+                    <input type="range" id="input-range" class="form-range" min="0" max="100" value="50"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-file">File Upload</label>
+                    <input type="file" id="input-file" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-file-multi">Multiple Files</label>
+                    <input type="file" id="input-file-multi" class="form-control" multiple accept=".pdf,.doc,.docx,.jpg,.png"/>
+                </div>
+            </div>
+        </div>
+
+        <!-- DROPDOWNS & SELECT -->
+        <div class="card mb-6" id="section-selects">
+            <div class="card-header">
+                <div class="card-title">📋 Dropdowns &amp; Selects</div>
+                <code class="font-mono text-sm text-muted">#section-selects</code>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="select-single">Single Select</label>
+                        <select id="select-single" class="form-control">
+                            <option value="">-- Choose option --</option>
+                            <option value="selenium">Selenium</option>
+                            <option value="cypress">Cypress</option>
+                            <option value="playwright">Playwright</option>
+                            <option value="appium">Appium</option>
+                            <option value="restassured">RestAssured</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="select-multi">Multi Select (hold Ctrl)</label>
+                        <select id="select-multi" class="form-control" multiple size="5">
+                            <option value="java">Java</option>
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="csharp">C#</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="select-grouped">Grouped Options</label>
+                        <select id="select-grouped" class="form-control">
+                            <optgroup label="UI Frameworks">
+                                <option value="selenium">Selenium WebDriver</option>
+                                <option value="playwright">Playwright</option>
+                                <option value="cypress">Cypress</option>
+                            </optgroup>
+                            <optgroup label="API Frameworks">
+                                <option value="restassured">RestAssured</option>
+                                <option value="postman">Postman</option>
+                                <option value="karate">Karate DSL</option>
+                            </optgroup>
+                            <optgroup label="Mobile">
+                                <option value="appium">Appium</option>
+                                <option value="espresso">Espresso</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="select-disabled">Disabled Select</label>
+                        <select id="select-disabled" class="form-control" disabled>
+                            <option>This is disabled</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHECKBOXES & RADIOS -->
+        <div class="card mb-6" id="section-checkboxes">
+            <div class="card-header">
+                <div class="card-title">☑️ Checkboxes &amp; Radio Buttons</div>
+                <code class="font-mono text-sm text-muted">#section-checkboxes</code>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div>
+                        <h4 style="margin-bottom:16px; font-size:0.9rem; color:var(--text-muted);">Checkboxes</h4>
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                            <label class="form-check"><input type="checkbox" id="chk-selenium" class="form-check-input" checked/><span class="form-check-label">Selenium WebDriver</span></label>
+                            <label class="form-check"><input type="checkbox" id="chk-cypress" class="form-check-input"/><span class="form-check-label">Cypress</span></label>
+                            <label class="form-check"><input type="checkbox" id="chk-playwright" class="form-check-input"/><span class="form-check-label">Playwright</span></label>
+                            <label class="form-check"><input type="checkbox" id="chk-disabled" class="form-check-input" disabled/><span class="form-check-label" style="opacity:0.5;">Disabled Option</span></label>
+                            <label class="form-check"><input type="checkbox" id="chk-agree" class="form-check-input"/><span class="form-check-label">I agree to the <a href="#" style="color:var(--primary-light)">Terms &amp; Conditions</a></span></label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom:16px; font-size:0.9rem; color:var(--text-muted);">Radio Buttons</h4>
+                        <div style="display:flex; flex-direction:column; gap:12px;">
+                            <label class="form-check"><input type="radio" id="radio-beginner" name="experience" class="form-check-input" value="beginner"/><span class="form-check-label">Beginner (0-1 years)</span></label>
+                            <label class="form-check"><input type="radio" id="radio-intermediate" name="experience" class="form-check-input" value="intermediate" checked/><span class="form-check-label">Intermediate (1-3 years)</span></label>
+                            <label class="form-check"><input type="radio" id="radio-senior" name="experience" class="form-check-input" value="senior"/><span class="form-check-label">Senior (3+ years)</span></label>
+                            <label class="form-check"><input type="radio" id="radio-expert" name="experience" class="form-check-input" value="expert"/><span class="form-check-label">Expert (8+ years)</span></label>
+                            <label class="form-check"><input type="radio" id="radio-disabled-opt" name="experience2" class="form-check-input" disabled/><span class="form-check-label" style="opacity:0.5;">Disabled Radio</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BADGES & TAGS -->
+        <div class="card mb-6" id="section-badges">
+            <div class="card-header">
+                <div class="card-title">🏷️ Badges &amp; Tags</div>
+            </div>
+            <div class="card-body">
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                    <span class="badge badge-primary" id="badge-primary">Primary</span>
+                    <span class="badge badge-success" id="badge-success">Success</span>
+                    <span class="badge badge-warning" id="badge-warning">Warning</span>
+                    <span class="badge badge-danger" id="badge-danger">Danger</span>
+                    <span class="badge badge-info" id="badge-info">Info</span>
+                    <span class="badge badge-muted" id="badge-muted">Muted</span>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <span th:each="tag : ${ {'selenium','cypress','playwright','appium','restassured','junit','testng','maven','gradle','jenkins'} }" 
+                          class="badge badge-primary" th:text="${tag}">tag</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- LINKS -->
+        <div class="card mb-6" id="section-links">
+            <div class="card-header"><div class="card-title">🔗 Links</div></div>
+            <div class="card-body">
+                <div style="display:flex; flex-wrap:wrap; gap:16px;">
+                    <a href="#section-links" id="link-anchor" style="color:var(--primary-light);">Anchor Link</a>
+                    <a href="/about" id="link-internal">Internal Link</a>
+                    <a href="https://www.selenium.dev" id="link-external" target="_blank" rel="noopener">External Link ↗</a>
+                    <a href="/products" id="link-nav" style="color:var(--secondary);">Navigation Link</a>
+                    <a href="#" id="link-disabled" style="opacity:0.4; pointer-events:none; cursor:not-allowed;">Disabled Link</a>
+                    <a href="mailto:test@example.com" id="link-email">Email Link</a>
+                    <a href="tel:+1234567890" id="link-tel">Phone Link</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC CONTENT -->
+        <div class="card mb-6" id="section-dynamic">
+            <div class="card-header"><div class="card-title">⚡ Dynamic Content</div></div>
+            <div class="card-body">
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+                    <button class="btn btn-primary" onclick="
+                        const el = document.getElementById('dynamic-text');
+                        el.textContent = 'Content changed at ' + new Date().toLocaleTimeString();
+                    ">Change Text</button>
+                    <button class="btn btn-secondary" onclick="
+                        const el = document.getElementById('dynamic-element');
+                        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+                    ">Toggle Visibility</button>
+                    <button class="btn btn-success" onclick="
+                        const el = document.getElementById('dynamic-list');
+                        const li = document.createElement('li');
+                        li.textContent = 'New Item ' + (el.children.length + 1);
+                        li.style.cssText = 'padding:8px; border-bottom:1px solid var(--border);';
+                        el.appendChild(li);
+                    ">Add List Item</button>
+                    <button class="btn btn-danger" onclick="
+                        const el = document.getElementById('dynamic-list');
+                        if (el.lastChild) el.removeChild(el.lastChild);
+                    ">Remove Last Item</button>
+                    <button class="btn btn-warning" onclick="
+                        const el = document.getElementById('dynamic-counter');
+                        el.textContent = parseInt(el.textContent) + 1;
+                    ">Increment Counter</button>
+                </div>
+                <div style="background:var(--dark-3); border-radius:var(--radius-sm); padding:16px; margin-bottom:16px;">
+                    <span id="dynamic-text" style="font-family:var(--font-mono);">Waiting for change...</span>
+                </div>
+                <div id="dynamic-element" style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3); border-radius:var(--radius-sm); padding:12px; margin-bottom:16px;">
+                    👋 This element can be hidden/shown
+                </div>
+                <div style="display:flex; gap:16px; align-items:flex-start;">
+                    <div>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Dynamic List:</p>
+                        <ul id="dynamic-list" style="list-style:none; background:var(--dark-3); border-radius:var(--radius-sm); overflow:hidden; min-width:200px;">
+                            <li style="padding:8px; border-bottom:1px solid var(--border);">Item 1</li>
+                            <li style="padding:8px; border-bottom:1px solid var(--border);">Item 2</li>
+                            <li style="padding:8px;">Item 3</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Counter:</p>
+                        <div id="dynamic-counter" style="font-size:3rem; font-weight:700; font-family:var(--font-mono); color:var(--primary-light);">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IFRAMES -->
+        <div class="card mb-6" id="section-iframe">
+            <div class="card-header"><div class="card-title">🖼️ iFrame</div></div>
+            <div class="card-body">
+                <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:16px;">Practice switching to iframes in your automation scripts.</p>
+                <iframe id="practice-iframe" 
+                        src="about:blank" 
+                        style="width:100%; height:200px; background:var(--dark-3); border:1px solid var(--border); border-radius:var(--radius-sm);"
+                        title="Practice iFrame">
+                </iframe>
+                <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="
+                    const frame = document.getElementById('practice-iframe');
+                    frame.contentDocument.open();
+                    frame.contentDocument.write('<body style=\'font-family:sans-serif;background:#1e293b;color:#e2e8f0;padding:20px;\'><h3>✅ Inside iFrame!</h3><p>This is content inside an iFrame. Timestamp: ' + new Date().toLocaleTimeString() + '</p><input type=\'text\' placeholder=\'Type inside iFrame\' style=\'padding:8px;border-radius:6px;border:1px solid #334155;background:#334155;color:#e2e8f0;\'/></body>');
+                    frame.contentDocument.close();
+                ">Load iFrame Content</button>
+            </div>
+        </div>
+
+        <!-- DRAG AND DROP -->
+        <div class="card mb-6" id="section-drag">
+            <div class="card-header"><div class="card-title">↕️ Drag &amp; Drop</div></div>
+            <div class="card-body">
+                <p style="color:var(--text-muted); font-size:0.875rem; margin-bottom:16px;">Drag items between the two lists.</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Source List</p>
+                        <div id="drag-source" style="min-height:120px; background:var(--dark-3); border-radius:var(--radius-sm); padding:8px; border:2px dashed var(--border);"
+                             ondragover="event.preventDefault(); this.style.borderColor='var(--primary)'"
+                             ondragleave="this.style.borderColor='var(--border)'"
+                             ondrop="event.preventDefault(); this.appendChild(document.getElementById(event.dataTransfer.getData('text'))); this.style.borderColor='var(--border)'">
+                            <div draggable="true" id="drag-item-1" ondragstart="event.dataTransfer.setData('text', this.id)"
+                                 style="padding:10px 14px; background:var(--card-bg); border-radius:var(--radius-sm); margin-bottom:8px; cursor:grab; border:1px solid var(--border);">🔷 Selenium Test</div>
+                            <div draggable="true" id="drag-item-2" ondragstart="event.dataTransfer.setData('text', this.id)"
+                                 style="padding:10px 14px; background:var(--card-bg); border-radius:var(--radius-sm); margin-bottom:8px; cursor:grab; border:1px solid var(--border);">🔶 Cypress Test</div>
+                            <div draggable="true" id="drag-item-3" ondragstart="event.dataTransfer.setData('text', this.id)"
+                                 style="padding:10px 14px; background:var(--card-bg); border-radius:var(--radius-sm); cursor:grab; border:1px solid var(--border);">🔹 API Test</div>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:8px;">Target List (drop here)</p>
+                        <div id="drag-target" style="min-height:120px; background:var(--dark-3); border-radius:var(--radius-sm); padding:8px; border:2px dashed var(--border);"
+                             ondragover="event.preventDefault(); this.style.borderColor='var(--success)'"
+                             ondragleave="this.style.borderColor='var(--border)'"
+                             ondrop="event.preventDefault(); this.appendChild(document.getElementById(event.dataTransfer.getData('text'))); this.style.borderColor='var(--border)'">
+                            <p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:20px 0;">Drop items here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOADING STATES -->
+        <div class="card mb-6" id="section-loading">
+            <div class="card-header"><div class="card-title">⏳ Loading States</div></div>
+            <div class="card-body">
+                <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+                    <button class="btn btn-primary" id="btn-loading-demo" onclick="
+                        const btn = this;
+                        btn.innerHTML = '<span class=\'spinner\'></span> Loading...';
+                        btn.disabled = true;
+                        setTimeout(() => { btn.innerHTML = '✓ Loaded!'; btn.disabled = false; }, 3000);
+                    ">Trigger Loading (3s)</button>
+                    <div id="loading-spinner" style="display:none; color:var(--primary-light);">
+                        <style>.spin { animation: spin 1s linear infinite; display:inline-block; } @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }</style>
+                        <span class="spin">⟳</span> Processing...
+                    </div>
+                    <button class="btn btn-outline" onclick="
+                        const el = document.getElementById('loading-spinner');
+                        el.style.display = 'flex';
+                        setTimeout(() => el.style.display = 'none', 4000);
+                    ">Show Spinner (4s)</button>
+                </div>
+                <div id="skeleton-demo" style="margin-top:20px;">
+                    <style>
+                        .skeleton { background: linear-gradient(90deg, var(--dark-3) 25%, var(--border) 50%, var(--dark-3) 75%);
+                            background-size: 400% 100%; animation: shimmer 1.5s infinite; border-radius:4px; }
+                        @keyframes shimmer { 0%{background-position:100% 50%} 100%{background-position:0% 50%} }
+                    </style>
+                    <div style="display:flex; gap:16px; align-items:flex-start;">
+                        <div class="skeleton" style="width:48px; height:48px; border-radius:50%; flex-shrink:0;"></div>
+                        <div style="flex:1;">
+                            <div class="skeleton" style="height:16px; width:60%; margin-bottom:8px;"></div>
+                            <div class="skeleton" style="height:12px; width:90%; margin-bottom:8px;"></div>
+                            <div class="skeleton" style="height:12px; width:75%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — UI Elements Reference Page</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

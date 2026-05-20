@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Login - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body style="display:flex; align-items:center; justify-content:center; min-height:100vh; background: var(--dark);">
+
+<div style="width:100%; max-width:420px; padding:24px;">
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:40px;">
+        <a href="/" style="font-size:2rem; text-decoration:none;">🤖</a>
+        <h1 style="font-size:1.5rem; font-weight:700; margin-top:12px;">Sign In to <span style="color:var(--primary-light)">AutoPractice</span></h1>
+        <p style="color:var(--text-muted); font-size:0.875rem; margin-top:8px;">Practice your login automation test scenarios</p>
+    </div>
+
+    <!-- Test Credentials Info -->
+    <div class="alert alert-info" style="margin-bottom:24px; font-size:0.85rem;">
+        <span>ℹ</span>
+        <div>
+            <strong>Test Credentials:</strong><br/>
+            admin / admin123 &nbsp;|&nbsp; user / user123 &nbsp;|&nbsp; testuser / Test@1234
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div th:if="${error}" class="alert alert-danger" data-auto-dismiss="5000">
+        <span>✕</span>
+        <span th:text="${error}">Error</span>
+    </div>
+    <div th:if="${message}" class="alert alert-success" data-auto-dismiss="5000">
+        <span>✓</span>
+        <span th:text="${message}">Message</span>
+    </div>
+
+    <!-- Login Form -->
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/login}" method="post" id="login-form" novalidate>
+                <div class="form-group">
+                    <label class="form-label required" for="username">Username</label>
+                    <input type="text" 
+                           id="username" 
+                           name="username" 
+                           class="form-control" 
+                           placeholder="Enter your username"
+                           autocomplete="username"
+                           required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required" for="password">Password</label>
+                    <input type="password" 
+                           id="password" 
+                           name="password" 
+                           class="form-control" 
+                           placeholder="Enter your password"
+                           autocomplete="current-password"
+                           required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-check">
+                        <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input"/>
+                        <span class="form-check-label">Remember me</span>
+                    </label>
+                </div>
+                <button type="submit" id="login-btn" class="btn btn-primary w-full">
+                    🔐 Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Links -->
+    <div style="text-align:center; margin-top:24px; display:flex; justify-content:space-between; font-size:0.85rem; color:var(--text-muted);">
+        <a href="/" style="color:var(--primary-light); text-decoration:none;">← Back to Home</a>
+        <a href="/contact" style="color:var(--primary-light); text-decoration:none;">Contact Support</a>
+    </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/dashboard" class="nav-link active">Dashboard</a></li>
+        <li><a href="/users" class="nav-link">Users</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <span style="color:#94a3b8; font-size:0.85rem;">
+            👤 <span sec:authentication="name">user</span>
+            <span sec:authorize="hasRole('ADMIN')" class="badge badge-danger" style="margin-left:4px;">ADMIN</span>
+        </span>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">🔐 Protected Page</div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">This page requires authentication. Practice verifying secure page access.</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card primary">
+            <div class="stat-icon primary">👥</div>
+            <div class="stat-value" th:text="${userCount}">0</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon success">📦</div>
+            <div class="stat-value" th:text="${productCount}">0</div>
+            <div class="stat-label">Products</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon warning">✉️</div>
+            <div class="stat-value" th:text="${contactCount}">0</div>
+            <div class="stat-label">Contacts</div>
+        </div>
+        <div class="stat-card secondary">
+            <div class="stat-icon secondary">⏳</div>
+            <div class="stat-value" th:text="${pendingTodos}">0</div>
+            <div class="stat-label">Pending Todos</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <!-- Recent Users -->
+        <div class="card" id="recent-users">
+            <div class="card-header">
+                <div class="card-title">Recent Users</div>
+                <a href="/users" class="btn btn-outline btn-sm">View All</a>
+            </div>
+            <div class="table-wrapper" style="border:none; border-radius:0;">
+                <table class="data-table">
+                    <thead><tr><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <tr th:each="user, iter : ${users}" th:if="${iter.index < 5}" th:id="'dash-user-' + ${user.id}">
+                            <td th:text="${user.fullName}">Name</td>
+                            <td class="text-muted text-sm" th:text="${user.email}">email</td>
+                            <td>
+                                <span th:if="${user.active}" class="badge badge-success">Active</span>
+                                <span th:unless="${user.active}" class="badge badge-danger">Inactive</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Todos -->
+        <div class="card" id="recent-todos">
+            <div class="card-header">
+                <div class="card-title">Todo Summary</div>
+                <a href="/todos" class="btn btn-outline btn-sm">Manage</a>
+            </div>
+            <div class="card-body" style="padding:0;">
+                <div th:each="todo, iter : ${todos}" th:if="${iter.index < 5}"
+                     style="display:flex; align-items:center; gap:12px; padding:12px 20px; border-bottom:1px solid var(--border);"
+                     th:id="'dash-todo-' + ${todo.id}">
+                    <span th:text="${todo.completed} ? '✅' : '⏳'">⏳</span>
+                    <span style="flex:1; font-size:0.875rem;" th:text="${todo.title}">Todo</span>
+                    <span class="badge"
+                          th:classappend="${todo.priority.name() == 'CRITICAL'} ? ' badge-danger' : ' badge-info'"
+                          th:text="${todo.priority}">MED</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Only Section -->
+    <div sec:authorize="hasRole('ADMIN')" class="card mt-4" id="admin-section" style="margin-top:24px; border-color:rgba(239,68,68,0.3);">
+        <div class="card-header" style="border-bottom-color:rgba(239,68,68,0.2);">
+            <div class="card-title" style="color:var(--danger);">🔒 Admin Only Section</div>
+            <span class="badge badge-danger">ADMIN ROLE REQUIRED</span>
+        </div>
+        <div class="card-body">
+            <p style="color:var(--text-muted); margin-bottom:16px; font-size:0.875rem;">
+                This section is only visible to users with the ADMIN role. Practice role-based access control testing.
+            </p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="btn btn-danger btn-sm" id="admin-btn-users">Manage Users</button>
+                <button class="btn btn-danger btn-sm" id="admin-btn-settings">System Settings</button>
+                <button class="btn btn-danger btn-sm" id="admin-btn-logs">View Logs</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Protected Dashboard</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

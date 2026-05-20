@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>API Docs - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link active">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <a href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">📡 REST API v1</div>
+        <h1 class="page-title">API Documentation</h1>
+        <p class="page-subtitle">Base URL: <code class="font-mono" style="color:var(--primary-light);">http://localhost:8080/api/v1</code></p>
+    </div>
+
+    <!-- Live API Tester -->
+    <div class="card mb-6" id="api-tester">
+        <div class="card-header">
+            <div class="card-title">⚡ Live API Tester</div>
+            <span class="badge badge-success">Interactive</span>
+        </div>
+        <div class="card-body">
+            <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;">
+                <select id="api-method" class="form-control" style="width:120px;">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="PATCH">PATCH</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+                <input type="text" id="api-url" class="form-control" value="/api/v1/health" style="flex:1;" placeholder="/api/v1/..."/>
+                <button class="btn btn-primary" id="btn-send-request" onclick="sendApiRequest()">Send →</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="api-body">Request Body (JSON)</label>
+                <textarea id="api-body" class="form-control font-mono" rows="4" placeholder='{"key": "value"}'></textarea>
+            </div>
+            <div style="margin-top:12px;">
+                <label class="form-label">Response:</label>
+                <pre id="api-response" style="background:var(--dark-3); border-radius:var(--radius-sm); padding:16px; font-family:var(--font-mono); font-size:0.8rem; overflow-x:auto; min-height:80px; color:var(--text);">Click Send to see the response...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick links -->
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:32px;">
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/health')">Health Check</button>
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/stats')">Stats</button>
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/users')">All Users</button>
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/products')">All Products</button>
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/todos')">All Todos</button>
+        <button class="btn btn-outline btn-sm" onclick="quickTest('/api/v1/contacts')">All Contacts</button>
+    </div>
+
+    <!-- ENDPOINTS -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab-group="api" data-tab="general">General</button>
+        <button class="tab-btn" data-tab-group="api" data-tab="users">Users</button>
+        <button class="tab-btn" data-tab-group="api" data-tab="products">Products</button>
+        <button class="tab-btn" data-tab-group="api" data-tab="todos">Todos</button>
+        <button class="tab-btn" data-tab-group="api" data-tab="contacts">Contacts</button>
+    </div>
+
+    <div class="tab-content active" data-tab-content="api" data-tab="general">
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/health</span><span class="endpoint-desc">Application health check</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/stats</span><span class="endpoint-desc">Record counts for all entities</span></div>
+    </div>
+
+    <div class="tab-content" data-tab-content="api" data-tab="users">
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/users</span><span class="endpoint-desc">List all users</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/users/{id}</span><span class="endpoint-desc">Get user by ID</span></div>
+        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/v1/users</span><span class="endpoint-desc">Create a new user (JSON body required)</span></div>
+        <div class="api-endpoint"><span class="method-badge method-put">PUT</span><span class="endpoint-path">/api/v1/users/{id}</span><span class="endpoint-desc">Update entire user record</span></div>
+        <div class="api-endpoint"><span class="method-badge method-patch">PATCH</span><span class="endpoint-path">/api/v1/users/{id}</span><span class="endpoint-desc">Partial update (active, newsletterSubscribed, bio)</span></div>
+        <div class="api-endpoint"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/api/v1/users/{id}</span><span class="endpoint-desc">Delete a user (returns 204)</span></div>
+
+        <div class="card" style="margin-top:16px;">
+            <div class="card-header"><div class="card-title">POST /api/v1/users — Sample Payload</div></div>
+            <div class="card-body">
+                <pre style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text); line-height:1.8;">{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@example.com",
+  "username": "janedoe",
+  "phoneNumber": "+1234567890",
+  "dateOfBirth": "1990-06-15",
+  "gender": "FEMALE",
+  "country": "USA",
+  "city": "New York",
+  "bio": "Test automation engineer",
+  "active": true,
+  "newsletterSubscribed": false
+}</pre>
+                <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="
+                    document.getElementById('api-method').value = 'POST';
+                    document.getElementById('api-url').value = '/api/v1/users';
+                    document.getElementById('api-body').value = JSON.stringify({firstName:'Jane',lastName:'Doe',email:'jane'+Date.now()+'@test.com',username:'jane'+Date.now(),active:true,newsletterSubscribed:false},null,2);
+                    document.getElementById('api-tester').scrollIntoView({behavior:'smooth'});
+                ">Try in Tester</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content" data-tab-content="api" data-tab="products">
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/products</span><span class="endpoint-desc">List all products</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/products?category=BOOKS</span><span class="endpoint-desc">Filter by category</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/products?search=selenium</span><span class="endpoint-desc">Search by name</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/products?featured=true</span><span class="endpoint-desc">Get featured products</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/products/{id}</span><span class="endpoint-desc">Get product by ID</span></div>
+        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/v1/products</span><span class="endpoint-desc">Create a product</span></div>
+        <div class="api-endpoint"><span class="method-badge method-put">PUT</span><span class="endpoint-path">/api/v1/products/{id}</span><span class="endpoint-desc">Update a product</span></div>
+        <div class="api-endpoint"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/api/v1/products/{id}</span><span class="endpoint-desc">Delete a product</span></div>
+    </div>
+
+    <div class="tab-content" data-tab-content="api" data-tab="todos">
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/todos</span><span class="endpoint-desc">List all todos</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/todos?completed=false</span><span class="endpoint-desc">Get pending todos</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/todos?completed=true</span><span class="endpoint-desc">Get completed todos</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/todos/{id}</span><span class="endpoint-desc">Get todo by ID</span></div>
+        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/v1/todos</span><span class="endpoint-desc">Create a todo</span></div>
+        <div class="api-endpoint"><span class="method-badge method-put">PUT</span><span class="endpoint-path">/api/v1/todos/{id}</span><span class="endpoint-desc">Update a todo</span></div>
+        <div class="api-endpoint"><span class="method-badge method-patch">PATCH</span><span class="endpoint-path">/api/v1/todos/{id}/toggle</span><span class="endpoint-desc">Toggle completion status</span></div>
+        <div class="api-endpoint"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/api/v1/todos/{id}</span><span class="endpoint-desc">Delete a todo</span></div>
+    </div>
+
+    <div class="tab-content" data-tab-content="api" data-tab="contacts">
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/contacts</span><span class="endpoint-desc">List all contacts</span></div>
+        <div class="api-endpoint"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/v1/contacts/{id}</span><span class="endpoint-desc">Get contact by ID</span></div>
+        <div class="api-endpoint"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/v1/contacts</span><span class="endpoint-desc">Create a contact message</span></div>
+        <div class="api-endpoint"><span class="method-badge method-patch">PATCH</span><span class="endpoint-path">/api/v1/contacts/{id}/status</span><span class="endpoint-desc">Update status (NEW, IN_PROGRESS, RESOLVED, CLOSED)</span></div>
+        <div class="api-endpoint"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/api/v1/contacts/{id}</span><span class="endpoint-desc">Delete a contact</span></div>
+    </div>
+
+    <!-- Login Credentials -->
+    <div class="card mt-4" id="login-credentials" style="margin-top:32px;">
+        <div class="card-header"><div class="card-title">🔐 Test Login Credentials</div></div>
+        <div class="card-body">
+            <div class="table-wrapper">
+                <table class="data-table" id="credentials-table">
+                    <thead>
+                        <tr><th>Username</th><th>Password</th><th>Role</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr id="cred-admin"><td class="font-mono">admin</td><td class="font-mono">admin123</td><td><span class="badge badge-danger">ADMIN, USER</span></td></tr>
+                        <tr id="cred-user"><td class="font-mono">user</td><td class="font-mono">user123</td><td><span class="badge badge-info">USER</span></td></tr>
+                        <tr id="cred-testuser"><td class="font-mono">testuser</td><td class="font-mono">Test@1234</td><td><span class="badge badge-info">USER</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — REST API Documentation</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+async function sendApiRequest() {
+    const method = document.getElementById('api-method').value;
+    const url = document.getElementById('api-url').value;
+    const bodyText = document.getElementById('api-body').value.trim();
+    const responseEl = document.getElementById('api-response');
+    responseEl.textContent = '⏳ Sending request...';
+    try {
+        const opts = { method, headers: { 'Content-Type': 'application/json' } };
+        if (bodyText && ['POST','PUT','PATCH'].includes(method)) opts.body = bodyText;
+        const res = await fetch(url, opts);
+        let data;
+        try { data = await res.json(); } catch { data = await res.text(); }
+        responseEl.textContent = `HTTP ${res.status} ${res.statusText}\n\n${typeof data === 'string' ? data : JSON.stringify(data, null, 2)}`;
+    } catch (e) {
+        responseEl.textContent = 'Error: ' + e.message;
+    }
+}
+function quickTest(url) {
+    document.getElementById('api-method').value = 'GET';
+    document.getElementById('api-url').value = url;
+    document.getElementById('api-body').value = '';
+    sendApiRequest();
+    document.getElementById('api-tester').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

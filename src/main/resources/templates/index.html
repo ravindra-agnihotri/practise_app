@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AutoPractice - UI & API Automation Test App</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="main-nav">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link active">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <span sec:authorize="isAuthenticated()" style="color:#94a3b8; font-size:0.85rem;">
+            👤 <span sec:authentication="name"></span>
+        </span>
+        <a sec:authorize="isAuthenticated()" href="/dashboard" class="btn btn-outline btn-sm">Dashboard</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm">Logout</button>
+        </form>
+        <a sec:authorize="isAnonymous()" href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge-tag">🧪 Automation Practice Platform</div>
+            <h1 class="hero-title">
+                Test Your Automation<br/>Skills on a <span class="highlight">Real App</span>
+            </h1>
+            <p class="hero-subtitle">
+                A fully functional Spring Boot + SQLite web application designed for practicing
+                Selenium UI automation, REST API testing, and end-to-end test scenarios.
+            </p>
+            <div class="hero-actions">
+                <a href="/elements" class="btn btn-primary btn-lg">🔍 Explore UI Elements</a>
+                <a href="/about" class="btn btn-outline btn-lg">📡 API Documentation</a>
+                <a href="/login" class="btn btn-secondary btn-lg">🔐 Test Login Flow</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section style="padding: 0 0 60px;">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-icon primary">👥</div>
+                    <div class="stat-value" th:text="${userCount}">0</div>
+                    <div class="stat-label">Registered Users</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon success">📦</div>
+                    <div class="stat-value" th:text="${productCount}">0</div>
+                    <div class="stat-label">Products in Catalog</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon warning">✉️</div>
+                    <div class="stat-value" th:text="${contactCount}">0</div>
+                    <div class="stat-label">Contact Submissions</div>
+                </div>
+                <div class="stat-card secondary">
+                    <div class="stat-icon secondary">✅</div>
+                    <div class="stat-value" th:text="${todoCount}">0</div>
+                    <div class="stat-label">Todo Items</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section style="padding: 0 0 80px;">
+        <div class="container">
+            <h2 class="page-title" style="text-align:center; margin-bottom:8px;">What Can You Practice?</h2>
+            <p style="text-align:center; color:#94a3b8; margin-bottom:0;">
+                Every element, form pattern, and API endpoint is designed for test automation scenarios.
+            </p>
+            <div class="features-grid">
+                <div class="feature-card" id="feature-forms">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">Complex Forms</div>
+                    <div class="feature-desc">
+                        Text inputs, selects, checkboxes, radio buttons, date pickers, file uploads, 
+                        range sliders, multi-select, form validation, and dynamic field toggling.
+                    </div>
+                    <a href="/forms" class="btn btn-outline btn-sm" style="margin-top:16px;">Try Forms →</a>
+                </div>
+                <div class="feature-card" id="feature-tables">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Data Tables</div>
+                    <div class="feature-desc">
+                        Sortable columns, pagination, inline search, CRUD operations, 
+                        expandable rows, and column visibility toggles.
+                    </div>
+                    <a href="/tables" class="btn btn-outline btn-sm" style="margin-top:16px;">Try Tables →</a>
+                </div>
+                <div class="feature-card" id="feature-modals">
+                    <div class="feature-icon">🗔</div>
+                    <div class="feature-title">Modals & Dialogs</div>
+                    <div class="feature-desc">
+                        Confirmation dialogs, form modals, nested modals, drawer panels,
+                        alert dialogs, and toast notifications.
+                    </div>
+                    <a href="/modals" class="btn btn-outline btn-sm" style="margin-top:16px;">Try Modals →</a>
+                </div>
+                <div class="feature-card" id="feature-api">
+                    <div class="feature-icon">📡</div>
+                    <div class="feature-title">REST API Testing</div>
+                    <div class="feature-desc">
+                        Full CRUD REST endpoints for Users, Products, Todos, and Contacts. 
+                        Supports GET, POST, PUT, PATCH, DELETE with JSON responses.
+                    </div>
+                    <a href="/about" class="btn btn-outline btn-sm" style="margin-top:16px;">API Docs →</a>
+                </div>
+                <div class="feature-card" id="feature-auth">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-title">Authentication</div>
+                    <div class="feature-desc">
+                        Spring Security login/logout flows. Test with pre-configured users: 
+                        admin/admin123, user/user123, testuser/Test@1234.
+                    </div>
+                    <a href="/login" class="btn btn-outline btn-sm" style="margin-top:16px;">Test Login →</a>
+                </div>
+                <div class="feature-card" id="feature-alerts">
+                    <div class="feature-icon">🔔</div>
+                    <div class="feature-title">Alerts & Notifications</div>
+                    <div class="feature-desc">
+                        Success, error, warning, and info alerts. Auto-dismissing notifications, 
+                        browser alerts, confirms, and prompt dialogs.
+                    </div>
+                    <a href="/alerts" class="btn btn-outline btn-sm" style="margin-top:16px;">Try Alerts →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section style="padding: 0 0 80px;">
+        <div class="container">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="page-title" style="margin:0;">Featured Products</h2>
+                <a href="/products" class="btn btn-outline btn-sm">View All →</a>
+            </div>
+            <div class="product-grid" id="featured-products">
+                <div th:each="product : ${featuredProducts}" class="product-card" th:id="'product-' + ${product.id}">
+                    <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"/>
+                    <div class="product-card-body">
+                        <div class="badge badge-primary" style="margin-bottom:8px;" th:text="${product.category}">ELECTRONICS</div>
+                        <div class="product-name" th:text="${product.name}">Product Name</div>
+                        <div class="product-description" th:text="${product.description}">Description</div>
+                        <div class="product-meta">
+                            <div class="product-price" th:text="'$' + ${product.price}">$0.00</div>
+                            <div class="stars">
+                                <span th:text="${'⭐ ' + product.rating}">⭐ 4.5</span>
+                            </div>
+                        </div>
+                        <div style="margin-top:16px; display:flex; gap:8px;">
+                            <button class="btn btn-primary btn-sm w-full" 
+                                    th:id="'add-to-cart-' + ${product.id}"
+                                    th:data-product-name="${product.name}"
+                                    onclick="showToast('Added to cart! 🛒', 'success')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Built with Spring Boot + SQLite for automation testing practice.</p>
+        <p style="margin-top:8px;">
+            <a href="/about">API Docs</a> · 
+            <a href="/elements">UI Elements</a> · 
+            <a href="/login">Login (admin/admin123)</a>
+        </p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

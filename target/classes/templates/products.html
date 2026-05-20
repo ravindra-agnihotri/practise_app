@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Products - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link active">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <button class="btn btn-primary btn-sm" data-modal-target="modal-add-product">+ Add Product</button>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">📦 Product Catalog</div>
+        <h1 class="page-title">Products</h1>
+        <p class="page-subtitle">Browse, search, and filter products. Practice interacting with cards, filters, and CRUD operations.</p>
+    </div>
+
+    <!-- Flash -->
+    <div th:if="${successMessage}" class="alert alert-success" data-auto-dismiss="4000">
+        <span>✓</span><span th:text="${successMessage}"></span>
+    </div>
+
+    <!-- SEARCH & FILTERS -->
+    <div class="card mb-6" id="product-filters">
+        <div class="card-body" style="padding:16px 24px;">
+            <form method="get" action="/products" style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+                <div style="flex:1; min-width:200px;">
+                    <label class="form-label" for="product-search">Search</label>
+                    <input type="text" id="product-search" name="search" class="form-control" placeholder="Search products..." th:value="${search}"/>
+                </div>
+                <div>
+                    <label class="form-label" for="product-category-filter">Category</label>
+                    <select id="product-category-filter" name="category" class="form-control">
+                        <option value="">All Categories</option>
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}" th:selected="${cat.name() == selectedCategory}">CATEGORY</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button type="submit" id="btn-filter-apply" class="btn btn-primary">Filter</button>
+                    <a href="/products" class="btn btn-outline" id="btn-filter-clear">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div class="product-grid" id="product-grid">
+        <div th:each="product : ${products}" class="product-card"
+             th:id="'product-card-' + ${product.id}"
+             th:attr="data-product-id=${product.id}, data-category=${product.category}, data-featured=${product.featured}">
+
+            <div style="position:relative;">
+                <img th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"/>
+                <div style="position:absolute; top:12px; left:12px; display:flex; gap:6px; flex-wrap:wrap;">
+                    <span class="badge badge-primary" th:text="${product.category}">ELECTRONICS</span>
+                    <span th:if="${product.featured}" class="badge badge-warning">⭐ Featured</span>
+                    <span th:unless="${product.available}" class="badge badge-danger">Out of Stock</span>
+                </div>
+            </div>
+
+            <div class="product-card-body">
+                <div class="product-name" th:text="${product.name}">Product Name</div>
+                <div class="product-description" th:text="${product.description}">Description</div>
+
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                    <span class="stars" th:text="${product.rating != null ? '⭐ ' + product.rating : ''}"></span>
+                    <span class="text-muted text-sm" th:text="${'Stock: ' + product.stock}">Stock: 100</span>
+                </div>
+
+                <div class="product-meta">
+                    <div class="product-price" th:text="'$' + ${product.price}">$0.00</div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-primary btn-sm"
+                                th:id="'btn-add-cart-' + ${product.id}"
+                                th:disabled="${!product.available}"
+                                th:attr="data-product-name=${product.name}"
+                                onclick="addToCart(this)">
+                            🛒 Cart
+                        </button>
+                        <button class="btn btn-outline btn-sm"
+                                th:id="'btn-wishlist-' + ${product.id}"
+                                onclick="this.textContent = this.textContent === '♡' ? '♥' : '♡'">♡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(products)}" style="text-align:center; padding:60px 0; color:var(--text-muted);">
+        <div style="font-size:3rem; margin-bottom:16px;">📦</div>
+        <p>No products found. <a href="/products" style="color:var(--primary-light)">Clear filters</a></p>
+    </div>
+
+    <!-- Cart Summary (practice DOM reading) -->
+    <div id="cart-summary" style="display:none; margin-top:32px;" class="card">
+        <div class="card-header">
+            <div class="card-title">🛒 Cart (<span id="cart-count">0</span> items)</div>
+            <button class="btn btn-outline btn-sm" onclick="clearCart()">Clear Cart</button>
+        </div>
+        <div class="card-body">
+            <ul id="cart-items" style="list-style:none; display:flex; flex-direction:column; gap:8px;"></ul>
+            <div style="margin-top:16px; font-size:1.1rem; font-weight:600;">
+                Total: <span id="cart-total" class="font-mono" style="color:var(--primary-light);">$0.00</span>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal-backdrop" id="modal-add-product">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="modal-title">Add New Product</span>
+            <button class="modal-close">✕</button>
+        </div>
+        <div class="modal-body">
+            <form th:action="@{/products}" method="post" id="add-product-form">
+                <div class="form-group">
+                    <label class="form-label required" for="prod-name">Name</label>
+                    <input type="text" id="prod-name" name="name" class="form-control" required/>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-desc">Description</label>
+                    <textarea id="prod-desc" name="description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label required" for="prod-price">Price ($)</label>
+                        <input type="number" id="prod-price" name="price" class="form-control" step="0.01" min="0" required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required" for="prod-stock">Stock</label>
+                        <input type="number" id="prod-stock" name="stock" class="form-control" min="0" value="0" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-category">Category</label>
+                    <select id="prod-category" name="category" class="form-control">
+                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}">CATEGORY</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-check">
+                        <input type="checkbox" id="prod-featured" name="featured" class="form-check-input"/>
+                        <span class="form-check-label">Mark as Featured</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="form-check">
+                        <input type="checkbox" id="prod-available" name="available" class="form-check-input" checked/>
+                        <span class="form-check-label">Available for Sale</span>
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" data-modal-close>Cancel</button>
+            <button class="btn btn-primary" id="btn-save-product" onclick="document.getElementById('add-product-form').submit()">Save Product</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Product Catalog</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+let cart = [];
+function addToCart(btn) {
+    const name = btn.getAttribute('data-product-name') || btn.closest('.product-card-body').querySelector('.product-name').textContent;
+    const priceText = btn.closest('.product-card-body').querySelector('.product-price').textContent;
+    const price = parseFloat(priceText.replace('$',''));
+    cart.push({ name, price });
+    renderCart();
+    showToast(`Added "${name}" to cart!`, 'success');
+}
+function renderCart() {
+    const summary = document.getElementById('cart-summary');
+    summary.style.display = cart.length ? 'block' : 'none';
+    document.getElementById('cart-count').textContent = cart.length;
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    document.getElementById('cart-total').textContent = '$' + total.toFixed(2);
+    document.getElementById('cart-items').innerHTML = cart.map((item, i) =>
+        `<li style="display:flex;justify-content:space-between;padding:8px;background:var(--dark-3);border-radius:6px;">
+            <span>${item.name}</span>
+            <span class="font-mono">$${item.price.toFixed(2)}</span>
+        </li>`
+    ).join('');
+}
+function clearCart() { cart = []; renderCart(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Todos - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link active">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <a href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">✅ Todo Automation Practice</div>
+        <h1 class="page-title">Todo Manager</h1>
+        <p class="page-subtitle">Practice CRUD operations — create, complete, and delete todo items.</p>
+    </div>
+
+    <!-- Flash -->
+    <div th:if="${successMessage}" class="alert alert-success" data-auto-dismiss="4000">
+        <span>✓</span><span th:text="${successMessage}"></span>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom:24px;">
+        <div class="stat-card primary">
+            <div class="stat-icon primary">📋</div>
+            <div class="stat-value" th:text="${todos.size()}">0</div>
+            <div class="stat-label">Total Todos</div>
+        </div>
+        <div class="stat-card success">
+            <div class="stat-icon success">✅</div>
+            <div class="stat-value" th:text="${completedCount}">0</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card warning">
+            <div class="stat-icon warning">⏳</div>
+            <div class="stat-value" th:text="${pendingCount}">0</div>
+            <div class="stat-label">Pending</div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:flex-start;">
+        <!-- TODO LIST -->
+        <div>
+            <!-- Filter tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab-group="todos" data-tab="all" id="tab-all">All (<span th:text="${todos.size()}">0</span>)</button>
+                <button class="tab-btn" data-tab-group="todos" data-tab="pending" id="tab-pending">Pending (<span th:text="${pendingCount}">0</span>)</button>
+                <button class="tab-btn" data-tab-group="todos" data-tab="completed" id="tab-completed">Completed (<span th:text="${completedCount}">0</span>)</button>
+            </div>
+
+            <!-- All todos -->
+            <div class="tab-content active" data-tab-content="todos" data-tab="all" id="todo-list-all">
+                <div th:each="todo : ${todos}" class="todo-item" th:id="'todo-item-' + ${todo.id}" th:classappend="${todo.completed} ? ' completed' : ''">
+                    <form th:action="@{'/todos/' + ${todo.id} + '/toggle'}" method="post" style="display:contents;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="todo-checkbox" style="background:none;border:none;cursor:pointer;padding:0;">
+                            <span th:text="${todo.completed} ? '☑' : '☐'" style="font-size:1.3rem;"></span>
+                        </button>
+                    </form>
+                    <div class="todo-content">
+                        <div class="todo-title" th:text="${todo.title}">Todo title</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;" th:if="${todo.description}" th:text="${todo.description}"></div>
+                        <div class="todo-meta">
+                            <span class="badge"
+                                  th:classappend="${todo.priority.name() == 'CRITICAL'} ? ' badge-danger' : (${todo.priority.name() == 'HIGH'} ? ' badge-warning' : (${todo.priority.name() == 'MEDIUM'} ? ' badge-info' : ' badge-muted'))"
+                                  th:text="${todo.priority}">MEDIUM</span>
+                            <span class="text-muted text-sm" th:if="${todo.assignedTo}" th:text="'👤 ' + ${todo.assignedTo}"></span>
+                            <span class="text-muted text-sm" th:if="${todo.dueDate}" th:text="'📅 ' + ${todo.dueDate}"></span>
+                            <span th:if="${todo.tags}" style="font-size:0.75rem; color:var(--primary-light); font-family:var(--font-mono);" th:text="${'🏷 ' + todo.tags}"></span>
+                        </div>
+                    </div>
+                    <div class="todo-actions">
+                        <form th:action="@{'/todos/' + ${todo.id} + '/delete'}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <button type="submit" class="btn btn-danger btn-sm btn-icon" th:id="'btn-delete-todo-' + ${todo.id}"
+                                    onclick="return confirm('Delete this todo?')" title="Delete">🗑</button>
+                        </form>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(todos)}" style="text-align:center; padding:40px; color:var(--text-muted);">
+                    No todos yet. Add one →
+                </div>
+            </div>
+
+            <!-- Pending -->
+            <div class="tab-content" data-tab-content="todos" data-tab="pending">
+                <div th:each="todo : ${todos}" th:if="${!todo.completed}" class="todo-item" th:id="'todo-pending-' + ${todo.id}">
+                    <span style="font-size:1.2rem;">⏳</span>
+                    <div class="todo-content">
+                        <div class="todo-title" th:text="${todo.title}">Title</div>
+                        <div class="todo-meta">
+                            <span class="badge badge-warning" th:text="${todo.priority}">MEDIUM</span>
+                            <span class="text-muted text-sm" th:if="${todo.dueDate}" th:text="'Due: ' + ${todo.dueDate}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="tab-content" data-tab-content="todos" data-tab="completed">
+                <div th:each="todo : ${todos}" th:if="${todo.completed}" class="todo-item completed" th:id="'todo-completed-' + ${todo.id}">
+                    <span style="font-size:1.2rem;">✅</span>
+                    <div class="todo-content">
+                        <div class="todo-title" th:text="${todo.title}">Title</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD TODO FORM -->
+        <div class="card" id="add-todo-card" style="position:sticky; top:80px;">
+            <div class="card-header"><div class="card-title">➕ Add New Todo</div></div>
+            <div class="card-body">
+                <form th:action="@{/todos}" method="post" id="add-todo-form" novalidate>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <div class="form-group">
+                        <label class="form-label required" for="todo-title">Title</label>
+                        <input type="text" id="todo-title" name="title" class="form-control" placeholder="Todo title..." required/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="todo-desc">Description</label>
+                        <textarea id="todo-desc" name="description" class="form-control" rows="2" placeholder="Optional details..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="todo-priority">Priority</label>
+                        <select id="todo-priority" name="priority" class="form-control">
+                            <option th:each="p : ${priorities}" th:value="${p}" th:text="${p}">MEDIUM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="todo-due">Due Date</label>
+                        <input type="date" id="todo-due" name="dueDate" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="todo-assigned">Assigned To</label>
+                        <input type="text" id="todo-assigned" name="assignedTo" class="form-control" placeholder="Name..."/>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="todo-tags">Tags (comma-separated)</label>
+                        <input type="text" id="todo-tags" name="tags" class="form-control" placeholder="selenium, login, smoke"/>
+                    </div>
+                    <button type="submit" id="btn-add-todo" class="btn btn-primary w-full">Add Todo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Todo Manager</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

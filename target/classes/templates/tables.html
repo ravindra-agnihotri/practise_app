@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tables - AutoPractice</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+</head>
+<body>
+<nav class="navbar">
+    <a href="/" class="navbar-brand">🤖 Auto<span>Practice</span></a>
+    <ul class="navbar-nav">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/elements" class="nav-link">UI Elements</a></li>
+        <li><a href="/forms" class="nav-link">Forms</a></li>
+        <li><a href="/tables" class="nav-link active">Tables</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/todos" class="nav-link">Todos</a></li>
+        <li><a href="/contact" class="nav-link">Contact</a></li>
+        <li><a href="/alerts" class="nav-link">Alerts</a></li>
+        <li><a href="/modals" class="nav-link">Modals</a></li>
+        <li><a href="/about" class="nav-link">API Docs</a></li>
+    </ul>
+    <div class="navbar-actions">
+        <a href="/login" class="btn btn-primary btn-sm">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+<div class="container">
+    <div class="page-header">
+        <div class="badge-tag">📊 Table Automation Practice</div>
+        <h1 class="page-title">Data Tables</h1>
+        <p class="page-subtitle">Practice reading, sorting, filtering, and interacting with data tables.</p>
+    </div>
+
+    <!-- USERS TABLE -->
+    <div class="card mb-6" id="users-table-section">
+        <div class="card-header">
+            <div class="card-title">👥 Users Table</div>
+            <div style="display:flex; gap:8px;">
+                <input type="text" class="search-input" placeholder="Search users..." data-table-search="users-table" style="width:200px;"/>
+                <a href="/users" class="btn btn-primary btn-sm">Manage Users</a>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="users-table">
+                <thead>
+                    <tr>
+                        <th data-sort="id">ID</th>
+                        <th data-sort="name">Full Name</th>
+                        <th data-sort="email">Email</th>
+                        <th data-sort="username">Username</th>
+                        <th data-sort="country">Country</th>
+                        <th data-sort="gender">Gender</th>
+                        <th data-sort="status">Status</th>
+                        <th>Newsletter</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}" th:id="'user-row-' + ${user.id}">
+                        <td class="font-mono" th:text="${user.id}">1</td>
+                        <td th:text="${user.fullName}">Alice Johnson</td>
+                        <td th:text="${user.email}">alice@example.com</td>
+                        <td><code class="font-mono" style="font-size:0.8rem;" th:text="${user.username}">alicej</code></td>
+                        <td th:text="${user.country ?: '—'}">USA</td>
+                        <td th:text="${user.gender ?: '—'}">FEMALE</td>
+                        <td>
+                            <span th:if="${user.active}" class="badge badge-success">Active</span>
+                            <span th:unless="${user.active}" class="badge badge-danger">Inactive</span>
+                        </td>
+                        <td>
+                            <span th:if="${user.newsletterSubscribed}" class="badge badge-info">Yes</span>
+                            <span th:unless="${user.newsletterSubscribed}" class="badge badge-muted">No</span>
+                        </td>
+                        <td class="text-muted text-sm" th:text="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd MMM yyyy') : '—'}">01 Jan 2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PRODUCTS TABLE -->
+    <div class="card mb-6" id="products-table-section">
+        <div class="card-header">
+            <div class="card-title">📦 Products Table</div>
+            <div style="display:flex; gap:8px;">
+                <input type="text" class="search-input" placeholder="Search products..." data-table-search="products-table" style="width:200px;"/>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Rating</th>
+                        <th>Featured</th>
+                        <th>Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${products}" th:id="'product-row-' + ${p.id}">
+                        <td class="font-mono" th:text="${p.id}">1</td>
+                        <td th:text="${p.name}">Product Name</td>
+                        <td><span class="badge badge-primary" th:text="${p.category}">ELECTRONICS</span></td>
+                        <td class="font-mono" th:text="'$' + ${p.price}">$0.00</td>
+                        <td>
+                            <span th:if="${p.stock == 0}" class="badge badge-danger">Out of Stock</span>
+                            <span th:unless="${p.stock == 0}" class="badge badge-success" th:text="${p.stock}">100</span>
+                        </td>
+                        <td th:text="${p.rating != null ? '⭐ ' + p.rating : '—'}">⭐ 4.5</td>
+                        <td>
+                            <span th:if="${p.featured}" class="badge badge-warning">Featured</span>
+                            <span th:unless="${p.featured}" class="badge badge-muted">No</span>
+                        </td>
+                        <td>
+                            <span th:if="${p.available}" class="badge badge-success">Yes</span>
+                            <span th:unless="${p.available}" class="badge badge-danger">No</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SORTABLE TABLE DEMO -->
+    <div class="card mb-6" id="sortable-table-section">
+        <div class="card-header">
+            <div class="card-title">🔃 Sortable Table (Click Headers)</div>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="sortable-table">
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="sortTable('sortable-table',0)" style="cursor:pointer;" data-col="0">Rank ↕</th>
+                        <th class="sortable" onclick="sortTable('sortable-table',1)" style="cursor:pointer;" data-col="1">Framework ↕</th>
+                        <th class="sortable" onclick="sortTable('sortable-table',2)" style="cursor:pointer;" data-col="2">Language ↕</th>
+                        <th class="sortable" onclick="sortTable('sortable-table',3)" style="cursor:pointer;" data-col="3">Stars (k) ↕</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody id="sortable-body">
+                    <tr><td>1</td><td>Selenium</td><td>Java</td><td>28</td><td><span class="badge badge-primary">UI</span></td></tr>
+                    <tr><td>2</td><td>Cypress</td><td>JavaScript</td><td>46</td><td><span class="badge badge-primary">UI</span></td></tr>
+                    <tr><td>3</td><td>Playwright</td><td>TypeScript</td><td>62</td><td><span class="badge badge-primary">UI</span></td></tr>
+                    <tr><td>4</td><td>RestAssured</td><td>Java</td><td>6</td><td><span class="badge badge-success">API</span></td></tr>
+                    <tr><td>5</td><td>Appium</td><td>Java</td><td>17</td><td><span class="badge badge-warning">Mobile</span></td></tr>
+                    <tr><td>6</td><td>JMeter</td><td>Java</td><td>8</td><td><span class="badge badge-info">Perf</span></td></tr>
+                    <tr><td>7</td><td>Karate</td><td>Java</td><td>7</td><td><span class="badge badge-success">API</span></td></tr>
+                    <tr><td>8</td><td>k6</td><td>JavaScript</td><td>22</td><td><span class="badge badge-info">Perf</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGINATION TABLE -->
+    <div class="card mb-6" id="paginated-table-section">
+        <div class="card-header">
+            <div class="card-title">📄 Paginated Table</div>
+            <span class="text-muted text-sm">Page <span id="current-page">1</span> of <span id="total-pages">3</span></span>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table" id="paginated-table">
+                <thead>
+                    <tr><th>#</th><th>Test Case</th><th>Module</th><th>Status</th><th>Duration</th></tr>
+                </thead>
+                <tbody id="paginated-body"></tbody>
+            </table>
+        </div>
+        <div style="padding:16px 20px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border);">
+            <span class="text-muted text-sm" id="page-info">Showing 1-5 of 15</span>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-outline btn-sm" id="page-prev" onclick="changePage(-1)">← Prev</button>
+                <button class="btn btn-outline btn-sm" id="page-btn-1" onclick="setPage(1)">1</button>
+                <button class="btn btn-outline btn-sm" id="page-btn-2" onclick="setPage(2)">2</button>
+                <button class="btn btn-outline btn-sm" id="page-btn-3" onclick="setPage(3)">3</button>
+                <button class="btn btn-outline btn-sm" id="page-next" onclick="changePage(1)">Next →</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer>
+    <div class="container">
+        <p>🤖 <strong>AutoPractice</strong> — Tables Automation Practice</p>
+    </div>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+// Sortable table
+let sortDir = {};
+function sortTable(tableId, col) {
+    const tbody = document.querySelector(`#${tableId} tbody`);
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    sortDir[col] = !sortDir[col];
+    rows.sort((a, b) => {
+        const aVal = a.cells[col].textContent.trim();
+        const bVal = b.cells[col].textContent.trim();
+        const aNum = parseFloat(aVal); const bNum = parseFloat(bVal);
+        const cmp = isNaN(aNum) ? aVal.localeCompare(bVal) : aNum - bNum;
+        return sortDir[col] ? cmp : -cmp;
+    });
+    rows.forEach(r => tbody.appendChild(r));
+}
+
+// Pagination
+const allRows = [
+    ['TC-001','Login','Auth','<span class="badge badge-success">PASS</span>','1.2s'],
+    ['TC-002','Logout','Auth','<span class="badge badge-success">PASS</span>','0.8s'],
+    ['TC-003','Register User','Auth','<span class="badge badge-danger">FAIL</span>','2.1s'],
+    ['TC-004','Add Product','Products','<span class="badge badge-success">PASS</span>','1.5s'],
+    ['TC-005','Delete Product','Products','<span class="badge badge-warning">SKIP</span>','0.1s'],
+    ['TC-006','Search Products','Products','<span class="badge badge-success">PASS</span>','0.9s'],
+    ['TC-007','Filter by Category','Products','<span class="badge badge-success">PASS</span>','1.1s'],
+    ['TC-008','Create Todo','Todos','<span class="badge badge-success">PASS</span>','0.7s'],
+    ['TC-009','Toggle Todo','Todos','<span class="badge badge-success">PASS</span>','0.5s'],
+    ['TC-010','Delete Todo','Todos','<span class="badge badge-success">PASS</span>','0.6s'],
+    ['TC-011','Submit Contact','Contact','<span class="badge badge-success">PASS</span>','1.3s'],
+    ['TC-012','View Users Table','Tables','<span class="badge badge-success">PASS</span>','0.4s'],
+    ['TC-013','Sort Table','Tables','<span class="badge badge-danger">FAIL</span>','0.3s'],
+    ['TC-014','API Health Check','API','<span class="badge badge-success">PASS</span>','0.2s'],
+    ['TC-015','API Create User','API','<span class="badge badge-success">PASS</span>','0.9s'],
+];
+let currentPage = 1;
+const rowsPerPage = 5;
+
+function renderPage(page) {
+    const tbody = document.getElementById('paginated-body');
+    const start = (page - 1) * rowsPerPage;
+    const end = Math.min(start + rowsPerPage, allRows.length);
+    tbody.innerHTML = allRows.slice(start, end).map(r =>
+        `<tr><td class="font-mono">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="font-mono text-muted">${r[4]}</td></tr>`
+    ).join('');
+    document.getElementById('page-info').textContent = `Showing ${start+1}-${end} of ${allRows.length}`;
+    document.getElementById('current-page').textContent = page;
+    currentPage = page;
+    [1,2,3].forEach(n => {
+        const btn = document.getElementById(`page-btn-${n}`);
+        btn.className = n === page ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm';
+    });
+}
+
+function changePage(dir) { const newPage = currentPage + dir; if (newPage >= 1 && newPage <= 3) renderPage(newPage); }
+function setPage(page) { renderPage(page); }
+renderPage(1);
+</script>
+</body>
+</html>
