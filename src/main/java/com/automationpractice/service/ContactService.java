@@ -26,8 +26,7 @@ public class ContactService {
     }
 
     public Contact updateStatus(Long id, Contact.Status status) {
-        return contactRepository.findById(id).map(c -> {
-            c.setStatus(status);
+        return contactRepository;
             return contactRepository.save(c);
         }).orElseThrow(() -> new RuntimeException("Contact not found: " + id));
     }
