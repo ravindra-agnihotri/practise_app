@@ -25,6 +25,7 @@ public class ApiController {
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
         return ResponseEntity.ok(Map.of(
+            asad
             "status", "UP",
             "app", "Automation Practice App",
             "version", "1.0.0",
